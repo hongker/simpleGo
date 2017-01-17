@@ -1,6 +1,9 @@
 package vendor
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
 // ControllerInterface interface
 type ControllerInterface interface {
@@ -27,6 +30,11 @@ func (c *Controller) Init(ct *Context, controllerName string) {
 	c.name = controllerName
 }
 
+// Get func
+func (c *Controller) Get() {
+	fmt.Println("hello")
+}
+
 // GetControllerName func
 func (c *Controller) GetControllerName() string {
 	return c.name
@@ -35,4 +43,19 @@ func (c *Controller) GetControllerName() string {
 // GetContext func
 func (c *Controller) GetContext() *Context {
 	return c.ct
+}
+
+// GetParams func
+func (c *Controller) GetParams() map[int]string {
+	return c.ct.Params
+}
+
+// GetResponseWriter func
+func (c *Controller) GetResponseWriter() http.ResponseWriter {
+	return c.ct.ResponseWriter
+}
+
+// GetRequest func
+func (c *Controller) GetRequest() *http.Request {
+	return c.ct.Request
 }

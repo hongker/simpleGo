@@ -10,22 +10,24 @@ type UserController struct {
 	vendor.Controller
 }
 
-// Get func
-func (c *UserController) Get() {
-	fmt.Println("hello")
+// Index function
+func (c *UserController) Index() {
+	fmt.Fprintln(c.GetResponseWriter(), "Hello,welcome to user module")
+	return
+
 }
 
 // Hello function
 func (c *UserController) Hello() {
-	fmt.Println(c.GetControllerName())
+	fmt.Fprintln(c.GetResponseWriter(), "Hello,welcome to user hello function")
 	return
 
 }
 
 // Info function
 func (c *UserController) Info() {
-	ct := c.GetContext()
-	uid := ct.Params[1]
-	fmt.Fprintln(ct.ResponseWriter, "Hello,"+uid)
+	params := c.GetParams()
+	uid := params[1]
+	fmt.Fprintln(c.GetResponseWriter(), "Hello,"+uid)
 	return
 }

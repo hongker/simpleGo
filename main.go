@@ -10,6 +10,7 @@ import (
 func main() {
 	router := vendor.NewRouter()
 	router.RegisterController("/", &controllers.IndexController{})
+	router.RegisterController("/user", &controllers.UserController{})
 	router.RegisterController("/user/hello", &controllers.UserController{})
 	router.RegisterController("/user/info/:id", &controllers.UserController{})
 

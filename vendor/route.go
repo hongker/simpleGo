@@ -46,6 +46,7 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 			params := make(map[int]string)
+			fmt.Println("length of params:", len(p.params))
 			if len(p.params) > 0 {
 				//add url parameters to the query param map
 				values := r.URL.Query()
@@ -58,29 +59,40 @@ func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 				fmt.Println("params:", params)
 
-				vc := reflect.New(p.controllerType)
-				//fmt.Println("vc:", vc)
-				//fmt.Println("type:", p.controllerType)
-				init := vc.MethodByName("Init")
-				//fmt.Println("init:", init)
-				in := make([]reflect.Value, 2)
-				ct := &Context{ResponseWriter: w, Request: r, Params: params}
-
-				in[0] = reflect.ValueOf(ct)
-				in[1] = reflect.ValueOf(p.controllerType.Name())
-				//fmt.Println("in", in)
-
-				init.Call(in)
-
-				parts := strings.Split(path, "/")
-
-				method := vc.MethodByName(strings.Title(parts[2]))
-				in = make([]reflect.Value, 0)
-				method.Call(in)
-
-				isFound = true
-
 			}
+			vc := reflect.New(p.controllerType)
+			//fmt.Println("vc:", vc)
+			//fmt.Println("type:", p.controllerType)
+			init := vc.MethodByName("Init")
+			//fmt.Println("init:", init)
+			in := make([]reflect.Value, 2)
+			ct := &Context{ResponseWriter: w, Request: r, Params: params}
+
+			in[0] = reflect.ValueOf(ct)
+			in[1] = reflect.ValueOf(p.controllerType.Name())
+			//fmt.Println("in", in)
+
+			init.Call(in)
+
+			// 解析路径
+			parts := strings.Split(path, "/")
+
+			length := len(parts)
+			defaultController := "index"
+			defaultAction := "index"
+			switch length {
+			case 1:
+				parts = append(parts, defaultController, defaultAction)
+			case 2:
+				parts = append(parts, defaultAction)
+			}
+			fmt.Println("parts:", parts)
+
+			method := vc.MethodByName(strings.Title(parts[2]))
+			in = make([]reflect.Value, 0)
+			method.Call(in)
+
+			isFound = true
 
 		}
 	}

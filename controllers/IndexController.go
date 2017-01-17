@@ -10,7 +10,7 @@ type IndexController struct {
 	vendor.Controller
 }
 
-// Get func
-func (c *IndexController) Get() {
-	fmt.Println("hello")
+// Index func
+func (c *IndexController) Index() {
+	fmt.Fprintln(c.GetResponseWriter(), "Hello,welcome to index page")
 }
